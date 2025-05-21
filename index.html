@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Her Royal Highness's Grievance Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #FF кадаc9 0%, #FFDDd5 100%); /* Light pink gradient */
+        }
+        .title-font {
+            font-family: 'Pacifico', cursive; /* Cute, girly script font */
+        }
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(231, 150, 174, 0.3); /* Softer pink shadow */
+            border: 2px solid #FFB6C1; /* LightPink border */
+        }
+        .form-input, .form-textarea, .form-select {
+            border-radius: 10px;
+            border: 1px solid #FFC0CB; /* Pink border */
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            border-color: #FF69B4; /* HotPink */
+            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.2); /* HotPink glow */
+            outline: none;
+        }
+        .submit-button {
+            background-color: #FF69B4; /* HotPink */
+            color: white;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 50px; /* Pill shape */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
+            border: none;
+        }
+        .submit-button:hover {
+            background-color: #FF1493; /* DeepPink */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 20, 147, 0.5);
+        }
+        .label-text {
+            color: #C71585; /* MediumVioletRed */
+            font-weight: 500;
+        }
+        /* Sparkle animation */
+        .sparkle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
+            animation: sparkle-animation 1s infinite ease-out;
+            opacity: 0;
+        }
+        @keyframes sparkle-animation {
+            0% { transform: scale(0.5); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.5); opacity: 0.5; }
+        }
+        .modal {
+            background-color: rgba(255, 228, 235, 0.95); /* Lighter pink for modal */
+            border: 2px solid #FF69B4;
+        }
+        .modal-button {
+            background-color: #FF69B4;
+        }
+        .modal-button:hover {
+            background-color: #FF1493;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 selection:bg-pink-300 selection:text-pink-800">
+
+    <div id="sparkle-container" class="fixed inset-0 pointer-events-none z-50"></div>
+
+    <div class="form-container p-6 sm:p-8 md:p-10 w-full max-w-lg transform transition-all duration-500 hover:scale-[1.02]">
+        <header class="mb-6 sm:mb-8 text-center">
+            <h1 class="title-font text-4xl sm:text-5xl text-pink-500 drop-shadow-sm">Her Royal Highness's</h1>
+            <h2 class="title-font text-3xl sm:text-4xl text-pink-500 mb-2 drop-shadow-sm">Grievance Portal</h2>
+            <p class="text-sm text-pink-400">Don't worry, sweetie, your voice will be heard!</p>
+        </header>
+
+        <form id="grievanceForm">
+            <div class="mb-5">
+                <label for="complaintType" class="block text-md label-text mb-1">What's the Category, Cutie?</label>
+                <select id="complaintType" name="complaintType" class="form-select mt-1 block w-full placeholder-pink-300 text-pink-700" required>
+                    <option value="" disabled selected>Select a category...</option>
+                    <option value="He Forgot Something... Again!">He Forgot Something... Again!</option>
+                    <option value="Minor Annoyance (But Still Annoying!)">Minor Annoyance (But Still Annoying!)</option>
+                    <option value="Need Cuddles STAT!">Need Cuddles STAT!</option>
+                    <option value="Fashion Emergency!">Fashion Emergency!</option>
+                    <option value="Snack Related Crisis">Snack Related Crisis</option>
+                    <option value="Just Feeling Grumpy">Just Feeling Grumpy</option>
+                    <option value="Other Royal Decree">Other Royal Decree</option>
+                </select>
+            </div>
+
+            <div class="mb-5">
+                <label for="issues" class="block text-md label-text mb-1">The Deets, Princess! (What's wrong?)</label>
+                <textarea id="issues" name="issues" rows="4" class="form-textarea mt-1 block w-full placeholder-pink-300 text-pink-700" placeholder="Spill the tea, darling..." required></textarea>
+            </div>
+
+            <div class="mb-8">
+                <label for="resolution" class="block text-md label-text mb-1">Magical Fix Idea? (Optional, my Queen!)</label>
+                <input type="text" id="resolution" name="resolution" class="form-input mt-1 block w-full placeholder-pink-300 text-pink-700" placeholder="e.g., More flowers, a movie night, or just a big hug!">
+            </div>
+
+            <button type="submit" id="submitButton" class="submit-button w-full flex items-center justify-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                <span>Submit Royal Decree!</span>
+            </button>
+        </form>
+    </div>
+
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-40">
+        <div class="modal p-8 rounded-2xl shadow-xl text-center w-full max-w-md">
+            <div class="text-6xl mb-4">💖</div>
+            <h3 class="text-2xl font-semibold text-pink-600 mb-2 title-font">Decree Sent!</h3>
+            <p class="text-pink-500 mb-6">Your super important message has been whisked away to the royal records (and he'll probably hear about it soon, hehe!).</p>
+            <p class="text-xs text-pink-400 mb-1">Your User ID for these submissions is:</p>
+            <p id="userIdDisplay" class="text-xs text-pink-500 font-mono bg-pink-100 p-1 rounded break-all mb-6"></p>
+            <button id="closeModalButton" class="modal-button text-white font-semibold py-2 px-6 rounded-full hover:bg-pink-500 transition-colors">Okay, Giggles!</button>
+        </div>
+    </div>
+     <div id="loadingOverlay" class="fixed inset-0 bg-white bg-opacity-75 flex flex-col items-center justify-center hidden z-50">
+        <div class="loader-pink"></div>
+        <p class="text-pink-500 mt-4 text-lg title-font">Sending your decree...</p>
+    </div>
+    <style>
+        .loader-pink {
+            border: 6px solid #ffe4e1; /* MISTYROSE */
+            border-top: 6px solid #ff69b4; /* HOTPINK */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1.5s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Configuration ---
+        // IMPORTANT: Replace with your actual Firebase config object
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'girly-complaint-portal'; // Use provided app_id or a default
+
+        let app;
+        let db;
+        let auth;
+        let currentUserId = null; // To store the user's ID
+
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            setLogLevel('debug'); // Optional: for more detailed Firebase logs
+            console.log("Firebase initialized successfully. App ID:", appId);
+        } catch (error) {
+            console.error("Error initializing Firebase:", error);
+            // Ensure displayErrorToUser is defined or callable here, or use a simpler alert/console.log for this critical path
+            // For now, we assume displayErrorToUser will be defined later, but this could be an issue if it's not.
+            // A direct DOM manipulation for error might be safer if displayErrorToUser relies on elements not yet parsed.
+            const submitButtonError = document.getElementById('submitButton');
+            if (submitButtonError) {
+                 submitButtonError.disabled = true;
+                 submitButtonError.textContent = 'Portal Offline!';
+                 submitButtonError.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            // Call displayErrorToUser if available, otherwise log to console.
+            // This function is defined later, so direct DOM manipulation is safer here for immediate feedback.
+            // However, to keep the structure, we'll call it, assuming it will work once the whole script is parsed.
+             if (typeof displayErrorToUser === "function") {
+                displayErrorToUser("Oh no! The magic portal isn't working right now. Please tell your tech support (him!) about this: " + error.message);
+             } else {
+                console.error("displayErrorToUser is not defined at the point of Firebase init error.");
+                // Fallback: Alert or simple DOM message
+                const body = document.querySelector('body');
+                const errorDiv = document.createElement('div');
+                errorDiv.style.color = 'red';
+                errorDiv.style.backgroundColor = 'pink';
+                errorDiv.style.padding = '10px';
+                errorDiv.style.textAlign = 'center';
+                errorDiv.textContent = "CRITICAL PORTAL ERROR: Firebase failed to initialize. Tell him! " + error.message;
+                if (body.firstChild) {
+                    body.insertBefore(errorDiv, body.firstChild);
+                } else {
+                    body.appendChild(errorDiv);
+                }
+             }
+            // REMOVED: return; // This was causing "Illegal return statement"
+        }
+
+
+        // --- Authentication ---
+        // Ensure auth is initialized before setting up onAuthStateChanged
+        if (auth) {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    console.log("User is signed in:", user.uid);
+                    currentUserId = user.uid;
+                    const userIdDisplayElement = document.getElementById('userIdDisplay');
+                    if (userIdDisplayElement) {
+                        userIdDisplayElement.textContent = currentUserId;
+                    }
+                } else {
+                    console.log("User is signed out, attempting anonymous sign-in.");
+                    signInAnonymously(auth).catch((error) => {
+                        console.error("Anonymous sign-in failed:", error);
+                        if (typeof displayErrorToUser === "function") {
+                            displayErrorToUser("Could not connect to the royal network. Please check your internet or tell him!");
+                        }
+                    });
+                }
+            });
+        } else {
+            console.error("Firebase Auth is not initialized. Authentication will not work.");
+            if (typeof displayErrorToUser === "function") {
+                displayErrorToUser("Royal Network Error: Authentication system failed to start. Please tell him!");
+            }
+        }
+
+
+        // Attempt to sign in with custom token if available, otherwise fall back to anonymous
+        async function authenticateUser() {
+            if (!auth) { // Guard against auth not being initialized
+                console.error("Cannot authenticate: Firebase Auth is not initialized.");
+                return;
+            }
+            try {
+                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                    console.log("Signed in with custom token.");
+                } else {
+                    await signInAnonymously(auth);
+                    console.log("Signed in anonymously as __initial_auth_token was not available.");
+                }
+            } catch (error) {
+                console.error("Authentication error:", error);
+                // If custom token fails, try anonymous as a fallback
+                if (error.code === 'auth/invalid-custom-token' || error.code === 'auth/custom-token-mismatch') {
+                    console.warn("Custom token invalid or mismatch, attempting anonymous sign-in.");
+                    try {
+                        await signInAnonymously(auth);
+                        console.log("Successfully signed in anonymously after custom token failure.");
+                    } catch (anonError) {
+                        console.error("Anonymous sign-in also failed:", anonError);
+                         if (typeof displayErrorToUser === "function") {
+                            displayErrorToUser("Oh dear! We couldn't verify your royal identity. Please tell your tech support (him!) about this.");
+                         }
+                    }
+                } else {
+                     if (typeof displayErrorToUser === "function") {
+                        displayErrorToUser("A little hiccup connecting. Please tell your tech support (him!) about this.");
+                     }
+                }
+            }
+        }
+        authenticateUser(); // Call authentication on script load
+
+
+        // --- Form Submission ---
+        const form = document.getElementById('grievanceForm');
+        const submitButton = document.getElementById('submitButton');
+        const successModal = document.getElementById('successModal');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!currentUserId) {
+                    if (typeof displayErrorToUser === "function") {
+                        displayErrorToUser("Hold your horses, Princess! We're still getting your royal connection. Try again in a moment.");
+                    }
+                    return;
+                }
+                if (!db) { // Guard against db not being initialized
+                     if (typeof displayErrorToUser === "function") {
+                        displayErrorToUser("Oh no! The royal records office is closed (database not ready). Tell him!");
+                     }
+                    return;
+                }
+
+                if(submitButton) submitButton.disabled = true;
+                if(loadingOverlay) loadingOverlay.classList.remove('hidden');
+
+
+                const complaintType = form.complaintType.value;
+                const issues = form.issues.value;
+                const resolution = form.resolution.value;
+
+                try {
+                    // Path: /artifacts/{appId}/public/data/girlyComplaints/{complaintId}
+                    const complaintsCollectionPath = `artifacts/${appId}/public/data/girlyComplaints`;
+                    console.log("Saving to collection:", complaintsCollectionPath);
+
+                    await addDoc(collection(db, complaintsCollectionPath), {
+                        userId: currentUserId, // Save the UID of the user submitting
+                        complaintType: complaintType,
+                        issues: issues,
+                        resolution: resolution || "No magical fix suggested (yet!)",
+                        submittedAt: serverTimestamp(), // Adds a server-side timestamp
+                        status: "Pending Royal Review"
+                    });
+
+                    console.log("Complaint submitted successfully!");
+                    form.reset();
+                    if(successModal) successModal.classList.remove('hidden');
+                    if (typeof createSparkles === "function") createSparkles(30); // Add some sparkle to the success!
+
+                } catch (error) {
+                    console.error("Error submitting complaint to Firestore:", error);
+                    if (typeof displayErrorToUser === "function") {
+                        displayErrorToUser("Oh no, a gremlin in the portal! 😱 Your message couldn't be sent. Please tell him to check the royal console! Error: " + error.message);
+                    }
+                } finally {
+                    if(submitButton) submitButton.disabled = false;
+                    if(loadingOverlay) loadingOverlay.classList.add('hidden');
+                }
+            });
+        }
+
+        if (closeModalButton) {
+            closeModalButton.addEventListener('click', () => {
+                if(successModal) successModal.classList.add('hidden');
+            });
+        }
+        
+
+        // --- Cute UI Enhancements ---
+        function createSparkles(count) {
+            const container = document.getElementById('sparkle-container');
+            if (!container) return;
+            container.innerHTML = ''; // Clear old sparkles
+            for (let i = 0; i < count; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = `${Math.random() * 100}%`;
+                sparkle.style.top = `${Math.random() * 100}%`;
+                sparkle.style.animationDelay = `${Math.random() * 1}s`;
+                sparkle.style.backgroundColor = ['#FFB6C1', '#FF69B4', '#FFC0CB', '#DB7093', '#FFFFFF'][Math.floor(Math.random() * 5)];
+                container.appendChild(sparkle);
+            }
+            setTimeout(() => {
+                if (container) container.innerHTML = '';
+            }, 1500); // Remove sparkles after animation
+        }
+        
+        // Function to display errors to the user in a non-alert way
+        function displayErrorToUser(message) {
+            const modal = document.getElementById('successModal');
+            if (!modal) {
+                console.error("Success modal not found for displaying error:", message);
+                alert("Portal Error: " + message); // Fallback if modal is missing
+                return;
+            }
+
+            const modalTitle = modal.querySelector('h3');
+            const modalMessage = modal.querySelector('p:nth-of-type(1)'); // The main message paragraph
+            const modalIcon = modal.querySelector('.text-6xl');
+            
+            if (modalIcon) modalIcon.textContent = '😭'; // Sad face for error
+            if (modalTitle) {
+                modalTitle.textContent = 'Uh Oh, Sparkle Hiccup!';
+                modalTitle.classList.remove('text-pink-600');
+                modalTitle.classList.add('text-red-500');
+            }
+            if (modalMessage) modalMessage.textContent = message;
+            
+            // Hide User ID display for errors
+            const userIdSection1 = modal.querySelector('p.text-xs.text-pink-400.mb-1');
+            const userIdSection2 = modal.querySelector('#userIdDisplay');
+            if(userIdSection1) userIdSection1.classList.add('hidden');
+            if(userIdSection2) userIdSection2.classList.add('hidden');
+
+            modal.classList.remove('hidden');
+        }
+
+        // Initial sparkle burst on load
+        // Ensure DOM is ready for sparkles, or at least sparkle-container exists
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                 if (typeof createSparkles === "function") setTimeout(() => createSparkles(20), 500);
+            });
+        } else {
+            if (typeof createSparkles === "function") setTimeout(() => createSparkles(20), 500);
+        }
+
+    </script>
+</body>
+</html>
